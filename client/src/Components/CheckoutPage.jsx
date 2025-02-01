@@ -72,7 +72,7 @@ function Checkout() {
         try {
             console.log("API hit");
             console.log(booking)
-            const response = await fetch("/api/air/orders", {
+            const response = await fetch("https://vercel-deployment-server-wine.vercel.app/api/air/orders", {
                 method: "POST",
                 headers: {
                     "Accept-Encoding": "gzip",

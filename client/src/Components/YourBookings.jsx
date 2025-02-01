@@ -133,7 +133,7 @@ function YourBookings() {
   const fetchOrderDetails = async (orderId) => {
     if (!orderId) return null;
 
-    const url = `/api/air/orders/${orderId}`;
+    const url = `https://vercel-deployment-server-wine.vercel.app/api/air/orders/${orderId}`;
 
     try {
       const response = await fetch(url, {

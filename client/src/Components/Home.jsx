@@ -86,7 +86,7 @@ const FlightSearch = () => {
       return;
     }
   
-    const url = `/api/air/offer_requests/${offerId}`;
+    const url = `https://vercel-deployment-server-wine.vercel.app/api/air/offer_requests/${offerId}`;
     // The working OfferID
     // const url = `/api/air/offer_requests/orq_0000AqVpQyFcYV2StxChKI`
   
@@ -270,7 +270,7 @@ const FlightSearch = () => {
     console.log(passengers);
     try {
       // Fetch one-way trip offers
-      const oneWayResponse = await fetch("/api/air/offer_requests", {
+      const oneWayResponse = await fetch("https://vercel-deployment-server-wine.vercel.app/api/air/offer_requests", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -293,7 +293,7 @@ const FlightSearch = () => {
       // Fetch return trip offers (if applicable)
       let returnOfferId = null;
       if (returnPayload) {
-        const returnResponse = await fetch("/api/air/offer_requests", {
+        const returnResponse = await fetch("https://vercel-deployment-server-wine.vercel.app/api/air/offer_requests", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -341,7 +341,7 @@ const FlightSearch = () => {
 
     const fetchAllAirports = async (after = null, allAirports = []) => {
       console.log("Fetching airports...");
-      let url = "/api/air/airports?limit=200";
+      let url = "https://vercel-deployment-server-wine.vercel.app/api/air/airports?limit=200";
       if (after) {
         url = `${url}&after=${after}`;
       }
