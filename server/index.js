@@ -7,19 +7,19 @@ require('dotenv').config();
 
 const app = express();
 
-// CORS Configuration
-app.use(
-  cors({
-    origin: 'https://vercel-deployment-client-topaz.vercel.app', // Allow requests from your frontend
-    methods: ['GET', 'POST', 'OPTIONS'], // Allow these HTTP methods
-    allowedHeaders: ['Content-Type', 'Authorization', 'Duffel-Version'], // Allow these headers
-    credentials: true, // Allow credentials (if needed)
-  })
-);
+// CORS Configuration - Must be before other middleware
+const corsOptions = {
+  origin: 'https://vercel-deployment-client-topaz.vercel.app',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Duffel-Version'],
+  credentials: true,
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+};
 
-// Handle preflight OPTIONS requests
-app.options('*', cors()); // Enable preflight requests for all routes
+app.use(cors(corsOptions));
 
+// Body parser middleware
 app.use(bodyParser.json());
 
 // MySQL Connection Pool Setup
@@ -34,30 +34,6 @@ const pool = mysql.createPool({
 });
 
 // Proxy middleware for Duffel API
-// app.use(
-//   '/api',
-//   createProxyMiddleware({
-//     target: 'https://api.duffel.com',
-//     changeOrigin: true,
-//     pathRewrite: { '^/api': '' },
-//     onProxyReq: (proxyReq, req, res) => {
-//       console.log('Setting Authorization header...');
-//       console.log('API Key:', process.env.DUFFEL_TEST_API_KEY); // Log the API key
-//       proxyReq.setHeader('Authorization', `Bearer ${process.env.DUFFEL_TEST_API_KEY}`);
-//       proxyReq.setHeader('Duffel-Version', 'v2');
-//       if (req.body) {
-//         proxyReq.setHeader('Content-Type', 'application/json');
-//       }
-//     },
-//     onProxyRes: (proxyRes, req, res) => {
-//       // Add CORS headers to the response
-//       proxyRes.headers['Access-Control-Allow-Origin'] = 'https://vercel-deployment-client-topaz.vercel.app';
-//       proxyRes.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS';
-//       proxyRes.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, Duffel-Version';
-//       proxyRes.headers['Access-Control-Allow-Credentials'] = 'true';
-//     },
-//   })
-// );
 app.use(
   '/api',
   createProxyMiddleware({
@@ -65,25 +41,29 @@ app.use(
     changeOrigin: true,
     pathRewrite: { '^/api': '' },
     onProxyReq: (proxyReq, req, res) => {
-      // Forward the original headers from the client request
+      // Forward the authorization header from the client
       if (req.headers['authorization']) {
         proxyReq.setHeader('Authorization', req.headers['authorization']);
+      } else {
+        proxyReq.setHeader('Authorization', `Bearer ${process.env.DUFFEL_TEST_API_KEY}`);
       }
-      if (req.headers['duffel-version']) {
-        proxyReq.setHeader('Duffel-Version', req.headers['duffel-version']);
-      }
+
+      proxyReq.setHeader('Duffel-Version', 'v2');
       
-      // Set content type for POST requests
-      if (req.method === 'POST') {
+      // Handle POST request body
+      if (req.method === 'POST' && req.body) {
+        const bodyData = JSON.stringify(req.body);
         proxyReq.setHeader('Content-Type', 'application/json');
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+        proxyReq.write(bodyData);
       }
     },
     onProxyRes: (proxyRes, req, res) => {
-      // Add CORS headers
-      res.setHeader('Access-Control-Allow-Origin', 'https://vercel-deployment-client-topaz.vercel.app');
-      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Duffel-Version');
-      res.setHeader('Access-Control-Allow-Credentials', 'true');
+      // Ensure CORS headers are set in the response
+      proxyRes.headers['Access-Control-Allow-Origin'] = 'https://vercel-deployment-client-topaz.vercel.app';
+      proxyRes.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS';
+      proxyRes.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, Duffel-Version';
+      proxyRes.headers['Access-Control-Allow-Credentials'] = 'true';
     },
   })
 );
