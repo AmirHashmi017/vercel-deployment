@@ -9,6 +9,56 @@ const app = express();
 
 // CORS Configuration
 app.use(
+  cors({
+    origin: 'https://vercel-deployment-client-topaz.vercel.app', // Allow requests from your frontend
+    methods: ['GET', 'POST', 'OPTIONS'], // Allow these HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization', 'Duffel-Version'], // Allow these headers
+    credentials: true, // Allow credentials (if needed)
+  })
+);
+
+// Handle preflight OPTIONS requests
+app.options('*', cors()); // Enable preflight requests for all routes
+
+app.use(bodyParser.json());
+
+// MySQL Connection Pool Setup
+const pool = mysql.createPool({
+  host: '153.92.15.25',
+  user: 'u909769236_info',
+  password: 'Thekidsstoreinfo@25',
+  database: 'u909769236_Flights_System',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+});
+
+// Proxy middleware for Duffel API
+// app.use(
+//   '/api',
+//   createProxyMiddleware({
+//     target: 'https://api.duffel.com',
+//     changeOrigin: true,
+//     pathRewrite: { '^/api': '' },
+//     onProxyReq: (proxyReq, req, res) => {
+//       console.log('Setting Authorization header...');
+//       console.log('API Key:', process.env.DUFFEL_TEST_API_KEY); // Log the API key
+//       proxyReq.setHeader('Authorization', `Bearer ${process.env.DUFFEL_TEST_API_KEY}`);
+//       proxyReq.setHeader('Duffel-Version', 'v2');
+//       if (req.body) {
+//         proxyReq.setHeader('Content-Type', 'application/json');
+//       }
+//     },
+//     onProxyRes: (proxyRes, req, res) => {
+//       // Add CORS headers to the response
+//       proxyRes.headers['Access-Control-Allow-Origin'] = 'https://vercel-deployment-client-topaz.vercel.app';
+//       proxyRes.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS';
+//       proxyRes.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, Duffel-Version';
+//       proxyRes.headers['Access-Control-Allow-Credentials'] = 'true';
+//     },
+//   })
+// );
+app.use(
   '/api',
   createProxyMiddleware({
     target: 'https://api.duffel.com',
@@ -38,48 +88,6 @@ app.use(
   })
 );
 
-
-// Handle preflight OPTIONS requests
-app.options('*', cors()); // Enable preflight requests for all routes
-
-app.use(bodyParser.json());
-
-// MySQL Connection Pool Setup
-const pool = mysql.createPool({
-  host: '153.92.15.25',
-  user: 'u909769236_info',
-  password: 'Thekidsstoreinfo@25',
-  database: 'u909769236_Flights_System',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-});
-
-// Proxy middleware for Duffel API
-app.use(
-  '/api',
-  createProxyMiddleware({
-    target: 'https://api.duffel.com',
-    changeOrigin: true,
-    pathRewrite: { '^/api': '' },
-    onProxyReq: (proxyReq, req, res) => {
-      console.log('Setting Authorization header...');
-      console.log('API Key:', process.env.DUFFEL_TEST_API_KEY); // Log the API key
-      proxyReq.setHeader('Authorization', `Bearer ${process.env.DUFFEL_TEST_API_KEY}`);
-      proxyReq.setHeader('Duffel-Version', 'v2');
-      if (req.body) {
-        proxyReq.setHeader('Content-Type', 'application/json');
-      }
-    },
-    onProxyRes: (proxyRes, req, res) => {
-      // Add CORS headers to the response
-      proxyRes.headers['Access-Control-Allow-Origin'] = 'https://vercel-deployment-client-topaz.vercel.app';
-      proxyRes.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS';
-      proxyRes.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, Duffel-Version';
-      proxyRes.headers['Access-Control-Allow-Credentials'] = 'true';
-    },
-  })
-);
 
 // Signup Endpoint
 app.post('/signup', (req, res) => {
