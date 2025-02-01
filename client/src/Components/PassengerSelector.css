@@ -1,0 +1,251 @@
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.container {
+  background-color: #f5f5f5;
+  display: flex;
+  padding: 20px;
+  width: 100%;
+}
+
+.passenger-selector {
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  background: rgba(255, 0, 0, 0.1);
+  padding: 8px;
+  border-radius: 5px;
+  margin-top: 10px;
+  text-align: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.selector-button {
+  width: 100%;
+  padding: 12px 16px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 16px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  color: #000;
+  transition: all 0.2s ease;
+}
+
+.selector-button:hover {
+  background: #007bff;
+  color: white;
+}
+
+.selector-button:hover .arrow-down {
+  border-top-color: white;
+}
+
+.arrow-down {
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #666;
+  margin-left: 8px;
+  transition: border-top-color 0.2s ease;
+}
+
+.dropdown-content {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 100%;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  z-index: 1000;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.passenger-type {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.passenger-info {
+  flex: 1;
+  min-width: 200px;
+}
+
+.passenger-info h3 {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.age-range {
+  font-size: 14px;
+  color: #666;
+}
+
+.counter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.counter-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  border: none;
+  background: #007bff;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.counter-button:hover:not(.disabled) {
+  background: #2b8af0;
+}
+
+.counter-button.disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.count {
+  font-size: 16px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.child-age {
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.child-age label {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.child-age select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-top: 8px;
+  appearance: none;
+  background: white url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;
+}
+
+.child-age select.error {
+  border-color: #dc2626;
+}
+
+.info-text {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.4;
+  margin-top: 16px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .passenger-selector {
+    max-width: 100%;
+  }
+
+  .dropdown-content {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-height: 70vh;
+    border-radius: 16px 16px 0 0;
+    padding: 20px;
+  }
+
+  .passenger-type {
+    padding: 12px 0;
+  }
+
+  .passenger-info h3 {
+    font-size: 14px;
+  }
+
+  .age-range {
+    font-size: 12px;
+  }
+
+  .counter-button {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 12px;
+  }
+
+  .selector-button {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .dropdown-content {
+    padding: 16px;
+    max-height: 80vh;
+  }
+
+  .passenger-type {
+    margin-bottom: 16px;
+  }
+
+  .child-age select {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .info-text {
+    font-size: 12px;
+  }
+}

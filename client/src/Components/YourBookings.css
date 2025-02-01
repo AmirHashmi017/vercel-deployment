@@ -1,0 +1,143 @@
+/* Add this to your existing styles.css */
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loading-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #000;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+.loading-text {
+  color: #333;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.select-buttons {
+  background-color: #007BFF;
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  width: fit-content;
+  position: absolute;
+  top: 2vw;
+  right: 2vw;
+  transition: background-color 0.2s;
+}
+
+.select-buttons:hover {
+  background-color: #0056b3;
+}
+
+.flight-summary {
+  margin-top: 3vw;
+  display: flex;
+  flex-direction: column;
+  row-gap: 3vw;
+  align-items: center;
+}
+
+.passenger-formsdx {
+  background-color: #fff;
+  width: 100%;
+  position: relative;
+  padding-top: 2vw;
+  margin-bottom: 3vw;
+}
+
+.passenger-formsdx h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 3vw;
+}
+
+.flight-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.no-bookings-message {
+  text-align: center;
+  margin-top: 4rem;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.no-bookings-message h2 {
+  font-size: 1.5rem;
+  color: #6b7280;
+  margin-bottom: 1rem;
+}
+
+.no-bookings-message p {
+  color: #9ca3af;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 769px) {
+  .passenger-formsdx h1 {
+    text-align: left;
+    margin-left: 5vw;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 3vw;
+  }
+  .select-buttons {
+    background-color: #007BFF;
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 400;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    width: fit-content;
+    position: absolute;
+    top: 2vw;
+    left:55vw;
+    transition: background-color 0.2s;
+    z-index: 999;
+  }
+}
