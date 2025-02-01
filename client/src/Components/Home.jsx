@@ -413,8 +413,7 @@ const FlightSearch = () => {
           "Authorization": `Bearer ${apiKey}`,
         },
         body: JSON.stringify(oneWayPayload),
-        credentials: 'include',
-        mode: 'cors' // Changed from 'no-cors' to 'cors'
+        credentials: 'include', // Changed from 'no-cors' to 'cors'
       });
   
       if (!oneWayResponse.ok) {
@@ -439,8 +438,7 @@ const FlightSearch = () => {
             "Authorization": `Bearer ${apiKey}`,
           },
           body: JSON.stringify(returnPayload),
-          credentials: 'include',
-          mode: 'cors' // Changed from 'no-cors' to 'cors'
+          credentials: 'include',// Changed from 'no-cors' to 'cors'
         });
   
         if (!returnResponse.ok) {
