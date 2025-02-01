@@ -43,6 +43,12 @@ app.use(
     target: 'https://api.duffel.com',
     changeOrigin: true,
     pathRewrite: { '^/api': '' },
+    timeout: 60000, // Increase timeout to 60 seconds
+    proxyTimeout: 60000,
+    onError: (err, req, res) => {
+      console.error('Proxy Error:', err);
+      res.status(500).json({ error: 'Proxy request failed', details: err.message });
+    },
     onProxyReq: (proxyReq, req, res) => {
       console.log('Proxying request to:', proxyReq.path);
       console.log('Request headers:', req.headers);

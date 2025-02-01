@@ -8,15 +8,17 @@
   ],
   "routes": [
     {
+      "src": "/api/(.*)",
+      "dest": "/api/$1.js"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/index.js",
-      "methods": ["GET", "POST", "OPTIONS"],
-      "headers": {
-        "Access-Control-Allow-Origin": "https://vercel-deployment-client-topaz.vercel.app",
-        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization, Duffel-Version",
-        "Access-Control-Allow-Credentials": "true"
-      }
+      "dest": "/index.js"
     }
-  ]
+  ],
+  "functions": {
+    "api/**/*.js": {
+      "maxDuration": 60
+    }
+  }
 }
