@@ -470,6 +470,8 @@ const FlightSearch = () => {
   
     } catch (error) {
       console.error("Error fetching flight offers:", error);
+      console.error("Fetch error:", error);
+  console.error("Error stack:", error.stack);
       showMessageModal("An error occurred while fetching flight offers. Please try again.");
     } finally {
       setSearchLoading(false);
