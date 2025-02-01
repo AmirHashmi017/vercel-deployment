@@ -6,7 +6,20 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 require('dotenv').config();
 
 const app = express();
-app.use(cors());
+
+// CORS Configuration
+app.use(
+  cors({
+    origin: 'https://vercel-deployment-client-topaz.vercel.app', // Allow requests from your frontend
+    methods: ['GET', 'POST', 'OPTIONS'], // Allow these HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization', 'Duffel-Version'], // Allow these headers
+    credentials: true, // Allow credentials (if needed)
+  })
+);
+
+// Handle preflight OPTIONS requests
+app.options('*', cors()); // Enable preflight requests for all routes
+
 app.use(bodyParser.json());
 
 // MySQL Connection Pool Setup
@@ -17,23 +30,23 @@ const pool = mysql.createPool({
   database: 'u909769236_Flights_System',
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
 });
 
 // Proxy middleware for Duffel API
 app.use(
-  "/api",
+  '/api',
   createProxyMiddleware({
-    target: "https://api.duffel.com",
+    target: 'https://api.duffel.com',
     changeOrigin: true,
-    pathRewrite: { "^/api": "" },
+    pathRewrite: { '^/api': '' },
     onProxyReq: (proxyReq, req, res) => {
-      console.log("Setting Authorization header...");
-      console.log("API Key:", process.env.DUFFEL_TEST_API_KEY); // Log the API key
-      proxyReq.setHeader("Authorization", `Bearer ${process.env.DUFFEL_TEST_API_KEY}`);
-      proxyReq.setHeader("Duffel-Version", "v2");
+      console.log('Setting Authorization header...');
+      console.log('API Key:', process.env.DUFFEL_TEST_API_KEY); // Log the API key
+      proxyReq.setHeader('Authorization', `Bearer ${process.env.DUFFEL_TEST_API_KEY}`);
+      proxyReq.setHeader('Duffel-Version', 'v2');
       if (req.body) {
-        proxyReq.setHeader("Content-Type", "application/json");
+        proxyReq.setHeader('Content-Type', 'application/json');
       }
     },
   })
