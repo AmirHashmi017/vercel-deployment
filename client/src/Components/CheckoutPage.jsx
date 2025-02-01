@@ -45,7 +45,7 @@ function Checkout() {
     }, [navigate]);
     const saveBookingToDatabase = async (orderId) => {
         try {
-            await axios.post("http://localhost:5000/bookings", {
+            await axios.post("https://vercel-deployment-server-wine.vercel.app/bookings", {
                 username: username,
                 orderid: orderId,
             });

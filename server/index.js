@@ -2,6 +2,8 @@ const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const { createProxyMiddleware } = require('http-proxy-middleware');
+require('dotenv').config();
 
 const app = express();
 app.use(cors());
@@ -17,6 +19,28 @@ const pool = mysql.createPool({
   connectionLimit: 10,
   queueLimit: 0
 });
+
+// Proxy middleware for Duffel API
+app.use(
+  "/api",
+  createProxyMiddleware({
+    target: "https://api.duffel.com",
+    changeOrigin: true,
+    pathRewrite: {
+      "^/api": "", // This will forward to https://api.duffel.com/air/offers
+    },
+    onProxyReq: (proxyReq, req, res) => {
+      // proxyReq.setHeader("Authorization", "Bearer ${process.env.DUFFEL_API_KEY}");
+      // For testing
+      proxyReq.setHeader("Authorization", `Bearer ${process.env.DUFFEL_TEST_API_KEY}`);
+      proxyReq.setHeader("Duffel-Version", "v2");
+      if (req.body) {
+        // Ensure body is forwarded correctly if required
+        proxyReq.setHeader("Content-Type", "application/json");
+      }
+    },
+  })
+);
 
 // Signup Endpoint
 app.post('/signup', (req, res) => {

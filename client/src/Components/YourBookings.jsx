@@ -108,7 +108,7 @@ function YourBookings() {
       setLoadingMessage("Fetching your bookings...");
       setError(null);
 
-      const response = await axios.get(`http://localhost:5000/bookings/${username}`);
+      const response = await axios.get(`https://vercel-deployment-server-wine.vercel.app/bookings/${username}`);
       
       if (response.status === 200) {
         const orders = response.data.orders || [];
