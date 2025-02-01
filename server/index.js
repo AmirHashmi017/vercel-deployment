@@ -32,6 +32,7 @@ app.use(
     onProxyReq: (proxyReq, req, res) => {
       // proxyReq.setHeader("Authorization", "Bearer ${process.env.DUFFEL_API_KEY}");
       // For testing
+      console.log("Duffel API Key:", process.env.DUFFEL_TEST_API_KEY);
       proxyReq.setHeader("Authorization", `Bearer ${process.env.DUFFEL_TEST_API_KEY}`);
       proxyReq.setHeader("Duffel-Version", "v2");
       if (req.body) {
