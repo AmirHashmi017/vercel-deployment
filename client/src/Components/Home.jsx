@@ -199,6 +199,142 @@ const FlightSearch = () => {
   };
 
 
+  // const fetchFlightOffers = async () => {
+  //   setFlightsresult([]);
+  //   setSearchLoading(true);
+  //   // Validate source and destination
+  //   if (!source) {
+  //     showMessageModal("Please select a source airport.");
+  //     setSearchLoading(false);
+  //     return;
+
+  //   }
+  //   if (!destination) {
+  //     showMessageModal("Please select a destination airport.");
+  //     setSearchLoading(false);
+  //     return;
+  //   }
+  //   if (source === destination) {
+  //     showMessageModal("Source and Destination can't be the same.");
+  //     setSearchLoading(false);
+  //     return;
+  //   }
+  
+  //   // Validate departure date
+  //   const currentDate = new Date();
+  //   currentDate.setHours(0, 0, 0, 0);
+  //   const parsedDepartureDate = new Date(departureDate);
+  //   if (parsedDepartureDate < currentDate) {
+  //     showMessageModal("Departure date must be today or later.");
+  //     return;
+  //   }
+  
+  //   // Prepare the payload for the one-way trip
+  //   const oneWayPayload = {
+  //     data: {
+  //       slices: [
+  //         {
+  //           origin: source,
+  //           destination: destination,
+  //           departure_date: departureDate,
+  //         },
+  //       ],
+  //       passengers: passengers,
+  //       cabin_class: travelClass,
+  //     },
+  //   };
+  
+  //   // Prepare the payload for the return trip (if applicable)
+  //   let returnPayload = null;
+  //   if (tripType === "return" && returnDate) {
+  //     const parsedReturnDate = new Date(returnDate);
+  //     if (parsedReturnDate < parsedDepartureDate) {
+  //       showMessageModal("Return date must be greater than or equal to the departure date.");
+  //       return;
+  //     }
+  
+  //     returnPayload = {
+  //       data: {
+  //         slices: [
+  //           {
+  //             origin: destination,
+  //             destination: source,
+  //             departure_date: returnDate,
+  //           },
+  //         ],
+  //         passengers: passengers,
+  //         cabin_class: travelClass,
+  //       },
+  //     };
+  //   }
+  //   console.log(passengers);
+  //   try {
+  //     // Fetch one-way trip offers
+  //     const oneWayResponse = await fetch("https://vercel-deployment-server-wine.vercel.app/api/air/offer_requests", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         "Duffel-Version": "v2",
+  //         "Authorization": `Bearer ${apiKey}`,
+  //       },
+  //       body: JSON.stringify(oneWayPayload),
+  //       // mode: 'no-cors',
+  //     });
+  
+  //     if (!oneWayResponse.ok) {
+  //       console.error("Failed to fetch one-way flight offers.");
+  //       return;
+  //     }
+  
+  //     const oneWayData = await oneWayResponse.json();
+  //     const oneWayOfferId = oneWayData.data?.id;
+  //     console.log("One-way flight offers:", oneWayOfferId);
+  
+  //     // Fetch return trip offers (if applicable)
+  //     let returnOfferId = null;
+  //     if (returnPayload) {
+  //       const returnResponse = await fetch("https://vercel-deployment-server-wine.vercel.app/api/air/offer_requests", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           "Duffel-Version": "v2",
+  //           "Authorization": `Bearer ${apiKey}`,
+  //         },
+  //         body: JSON.stringify(returnPayload),
+  //         // mode: 'no-cors',
+  //       });
+  
+  //       if (!returnResponse.ok) {
+  //         console.error("Failed to fetch return flight offers.");
+  //         return;
+  //       }
+  
+  //       const returnData = await returnResponse.json();
+  //       returnOfferId = returnData.data?.id;
+  //       console.log("Return flight offers:", returnOfferId);
+  //     }
+  
+  //     // Fetch and combine the results
+  //     const oneWayOffers = await fetchOfferRequest(oneWayOfferId);
+  //     let returnOffers = null;
+  //     if (returnOfferId) {
+  //       returnOffers = await fetchOfferRequest(returnOfferId);
+  //     }
+  
+  //     // Combine the results and update the state
+  //     const combinedResults = returnOffers ? [...oneWayOffers, ...returnOffers] : oneWayOffers;
+  //     if(combinedResults.length==0)
+  //       {
+  //         showMessageModal("Sorry, no flights available for your search criteria right now. Please try again later.");
+  //         return;
+  //       }
+  //     setFlightsresult(combinedResults);
+  
+  //   } catch (error) {
+  //     console.error("Error fetching flight offers:", error);
+  //   }
+  // };
+  
   const fetchFlightOffers = async () => {
     setFlightsresult([]);
     setSearchLoading(true);
@@ -207,7 +343,6 @@ const FlightSearch = () => {
       showMessageModal("Please select a source airport.");
       setSearchLoading(false);
       return;
-
     }
     if (!destination) {
       showMessageModal("Please select a destination airport.");
@@ -278,11 +413,14 @@ const FlightSearch = () => {
           "Authorization": `Bearer ${apiKey}`,
         },
         body: JSON.stringify(oneWayPayload),
-        // mode: 'no-cors',
+        credentials: 'include',
+        mode: 'cors' // Changed from 'no-cors' to 'cors'
       });
   
       if (!oneWayResponse.ok) {
         console.error("Failed to fetch one-way flight offers.");
+        const errorText = await oneWayResponse.text();
+        console.error("Error details:", errorText);
         return;
       }
   
@@ -301,11 +439,14 @@ const FlightSearch = () => {
             "Authorization": `Bearer ${apiKey}`,
           },
           body: JSON.stringify(returnPayload),
-          // mode: 'no-cors',
+          credentials: 'include',
+          mode: 'cors' // Changed from 'no-cors' to 'cors'
         });
   
         if (!returnResponse.ok) {
           console.error("Failed to fetch return flight offers.");
+          const errorText = await returnResponse.text();
+          console.error("Error details:", errorText);
           return;
         }
   
@@ -323,17 +464,19 @@ const FlightSearch = () => {
   
       // Combine the results and update the state
       const combinedResults = returnOffers ? [...oneWayOffers, ...returnOffers] : oneWayOffers;
-      if(combinedResults.length==0)
-        {
-          showMessageModal("Sorry, no flights available for your search criteria right now. Please try again later.");
-          return;
-        }
+      if(combinedResults.length === 0) {
+        showMessageModal("Sorry, no flights available for your search criteria right now. Please try again later.");
+        return;
+      }
       setFlightsresult(combinedResults);
   
     } catch (error) {
       console.error("Error fetching flight offers:", error);
+      showMessageModal("An error occurred while fetching flight offers. Please try again.");
+    } finally {
+      setSearchLoading(false);
     }
-  };
+};
   useEffect(() => {
   
  
