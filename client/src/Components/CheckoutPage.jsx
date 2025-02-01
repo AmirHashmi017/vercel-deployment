@@ -79,7 +79,6 @@ function Checkout() {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
                     "Duffel-Version": "v2",
-                    "Authorization": "Bearer ",
                 },
                 body: JSON.stringify({
                     data: {

@@ -140,7 +140,6 @@ function YourBookings() {
         method: "GET",
         headers: {
           "Duffel-Version": "v2",
-          Authorization: "Bearer",
         },
       });
 

@@ -95,8 +95,6 @@ const FlightSearch = () => {
         method: "GET", // Since you're fetching data, use GET
         headers: {
           "Duffel-Version": "v2",
-          // Authorization: "Bearer ",
-          Authorization: "Bearer ",
         },
       });
   
@@ -275,8 +273,6 @@ const FlightSearch = () => {
         headers: {
           "Content-Type": "application/json",
           "Duffel-Version": "v2",
-          // Authorization: "Bearer ",
-          Authorization: "Bearer ",
         },
         body: JSON.stringify(oneWayPayload),
       });
@@ -298,8 +294,6 @@ const FlightSearch = () => {
           headers: {
             "Content-Type": "application/json",
             "Duffel-Version": "v2",
-            // Authorization: "Bearer ",
-            Authorization: "Bearer ",
           },
           body: JSON.stringify(returnPayload),
         });
@@ -351,9 +345,6 @@ const FlightSearch = () => {
           method: "GET",
           headers: {
             "Duffel-Version": "v2",
-            // Authorization:
-            //   "Bearer ",
-            Authorization: "Bearer",
           },
         });
 
