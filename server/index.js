@@ -34,6 +34,17 @@ const pool = mysql.createPool({
 });
 
 // Proxy middleware for Duffel API
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://vercel-deployment-client-topaz.vercel.app');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Duffel-Version');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  next();
+});
+
 app.use(
   '/api',
   createProxyMiddleware({
@@ -41,16 +52,13 @@ app.use(
     changeOrigin: true,
     pathRewrite: { '^/api': '' },
     onProxyReq: (proxyReq, req, res) => {
-      // Forward the authorization header from the client
       if (req.headers['authorization']) {
         proxyReq.setHeader('Authorization', req.headers['authorization']);
       } else {
         proxyReq.setHeader('Authorization', `Bearer ${process.env.DUFFEL_TEST_API_KEY}`);
       }
-
       proxyReq.setHeader('Duffel-Version', 'v2');
-      
-      // Handle POST request body
+
       if (req.method === 'POST' && req.body) {
         const bodyData = JSON.stringify(req.body);
         proxyReq.setHeader('Content-Type', 'application/json');
@@ -58,8 +66,7 @@ app.use(
         proxyReq.write(bodyData);
       }
     },
-    onProxyRes: (proxyRes, req, res) => {
-      // Ensure CORS headers are set in the response
+    onProxyRes: (proxyRes) => {
       proxyRes.headers['Access-Control-Allow-Origin'] = 'https://vercel-deployment-client-topaz.vercel.app';
       proxyRes.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS';
       proxyRes.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, Duffel-Version';
