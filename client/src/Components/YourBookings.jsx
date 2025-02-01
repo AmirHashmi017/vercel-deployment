@@ -7,6 +7,7 @@ import SFlightCard from "./SingleFlightCard";
 import "./YourBookings.css";
 
 function YourBookings() {
+  const apiKey = process.env.REACT_APP_DUFFLE_TEST_API_KEY;
   const navigate = useNavigate();
   const { username } = useUser();
   const [orderIDs, setOrderIDs] = useState([]);
@@ -140,6 +141,7 @@ function YourBookings() {
         method: "GET",
         headers: {
           "Duffel-Version": "v2",
+          "Authorization": `Bearer ${apiKey}`,
         },
       });
 

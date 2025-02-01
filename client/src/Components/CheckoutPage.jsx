@@ -12,6 +12,7 @@ import { useUser } from '../context/UserContext';
 function Checkout() {
     const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false); 
+const apiKey = process.env.REACT_APP_DUFFLE_TEST_API_KEY;
     const { selectedFlight } = useFlight();
     const { booking, setBooking } = useBooking();
     const [apiResponse, setApiResponse] = useState(null);
@@ -79,6 +80,7 @@ function Checkout() {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
                     "Duffel-Version": "v2",
+                    "Authorization": `Bearer ${apiKey}`,
                 },
                 body: JSON.stringify({
                     data: {

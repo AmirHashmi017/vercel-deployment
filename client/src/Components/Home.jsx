@@ -13,6 +13,7 @@ import MessageModal from "./MessageModal"; // Import the modal component
 import './MessageModal.css';
 import LoginRegisterForm from './LoginRegistrationForm';
 const FlightSearch = () => {
+  const apiKey = process.env.REACT_APP_DUFFLE_TEST_API_KEY;
   const [showModal, setShowModal] = useState(false); // Modal visibility state
   const [message, setMessage] = useState('');
   const{passengers}=usePassengers();
@@ -95,6 +96,7 @@ const FlightSearch = () => {
         method: "GET", // Since you're fetching data, use GET
         headers: {
           "Duffel-Version": "v2",
+          "Authorization": `Bearer ${apiKey}`,
         },
       });
   
@@ -273,6 +275,7 @@ const FlightSearch = () => {
         headers: {
           "Content-Type": "application/json",
           "Duffel-Version": "v2",
+          "Authorization": `Bearer ${apiKey}`,
         },
         body: JSON.stringify(oneWayPayload),
       });
@@ -294,6 +297,7 @@ const FlightSearch = () => {
           headers: {
             "Content-Type": "application/json",
             "Duffel-Version": "v2",
+            "Authorization": `Bearer ${apiKey}`,
           },
           body: JSON.stringify(returnPayload),
         });
@@ -335,6 +339,7 @@ const FlightSearch = () => {
 
     const fetchAllAirports = async (after = null, allAirports = []) => {
       console.log("Fetching airports...");
+      console.log("API Key:", apiKey);
       let url = "https://vercel-deployment-server-wine.vercel.app/api/air/airports?limit=200";
       if (after) {
         url = `${url}&after=${after}`;
@@ -345,6 +350,7 @@ const FlightSearch = () => {
           method: "GET",
           headers: {
             "Duffel-Version": "v2",
+            "Authorization": `Bearer ${apiKey}`,
           },
         });
 
