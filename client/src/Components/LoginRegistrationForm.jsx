@@ -45,7 +45,7 @@ const LoginRegisterForm = () => {
     setIsLoading(true);
     setLoadingMessage('Logging in...');
     try {
-      const response = await axios.post("http://localhost:5000/login", {
+      const response = await axios.post("https://vercel-deployment-server-wine.vercel.app/login", {
         username: formData.username,
         password: formData.password,
       });
@@ -72,7 +72,7 @@ const LoginRegisterForm = () => {
     setIsLoading(true);
     setLoadingMessage('Creating your account...');
     try {
-      await axios.post("http://localhost:5000/signup", {
+      await axios.post("https://vercel-deployment-server-wine.vercel.app/signup", {
         username: formData.username,
         password: formData.password,
       });
