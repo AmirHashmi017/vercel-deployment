@@ -49,6 +49,13 @@ app.use(
         proxyReq.setHeader('Content-Type', 'application/json');
       }
     },
+    onProxyRes: (proxyRes, req, res) => {
+      // Add CORS headers to the response
+      proxyRes.headers['Access-Control-Allow-Origin'] = 'https://vercel-deployment-client-topaz.vercel.app';
+      proxyRes.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS';
+      proxyRes.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, Duffel-Version';
+      proxyRes.headers['Access-Control-Allow-Credentials'] = 'true';
+    },
   })
 );
 
