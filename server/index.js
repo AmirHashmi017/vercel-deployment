@@ -9,13 +9,35 @@ const app = express();
 
 // CORS Configuration
 app.use(
-  cors({
-    origin: 'https://vercel-deployment-client-topaz.vercel.app', // Allow requests from your frontend
-    methods: ['GET', 'POST', 'OPTIONS'], // Allow these HTTP methods
-    allowedHeaders: ['Content-Type', 'Authorization', 'Duffel-Version'], // Allow these headers
-    credentials: true, // Allow credentials (if needed)
+  '/api',
+  createProxyMiddleware({
+    target: 'https://api.duffel.com',
+    changeOrigin: true,
+    pathRewrite: { '^/api': '' },
+    onProxyReq: (proxyReq, req, res) => {
+      // Forward the original headers from the client request
+      if (req.headers['authorization']) {
+        proxyReq.setHeader('Authorization', req.headers['authorization']);
+      }
+      if (req.headers['duffel-version']) {
+        proxyReq.setHeader('Duffel-Version', req.headers['duffel-version']);
+      }
+      
+      // Set content type for POST requests
+      if (req.method === 'POST') {
+        proxyReq.setHeader('Content-Type', 'application/json');
+      }
+    },
+    onProxyRes: (proxyRes, req, res) => {
+      // Add CORS headers
+      res.setHeader('Access-Control-Allow-Origin', 'https://vercel-deployment-client-topaz.vercel.app');
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Duffel-Version');
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+    },
   })
 );
+
 
 // Handle preflight OPTIONS requests
 app.options('*', cors()); // Enable preflight requests for all routes
