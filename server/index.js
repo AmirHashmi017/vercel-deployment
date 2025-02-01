@@ -26,17 +26,13 @@ app.use(
   createProxyMiddleware({
     target: "https://api.duffel.com",
     changeOrigin: true,
-    pathRewrite: {
-      "^/api": "", // This will forward to https://api.duffel.com/air/offers
-    },
+    pathRewrite: { "^/api": "" },
     onProxyReq: (proxyReq, req, res) => {
-      // proxyReq.setHeader("Authorization", "Bearer ${process.env.DUFFEL_API_KEY}");
-      // For testing
-      console.log("Duffel API Key:", process.env.DUFFEL_TEST_API_KEY);
+      console.log("Setting Authorization header...");
+      console.log("API Key:", process.env.DUFFEL_TEST_API_KEY); // Log the API key
       proxyReq.setHeader("Authorization", `Bearer ${process.env.DUFFEL_TEST_API_KEY}`);
       proxyReq.setHeader("Duffel-Version", "v2");
       if (req.body) {
-        // Ensure body is forwarded correctly if required
         proxyReq.setHeader("Content-Type", "application/json");
       }
     },
