@@ -438,7 +438,6 @@ const FlightSearch = () => {
             "Authorization": `Bearer ${apiKey}`,
           },
           body: JSON.stringify(returnPayload),
-          credentials: 'include',// Changed from 'no-cors' to 'cors'
         });
   
         if (!returnResponse.ok) {
