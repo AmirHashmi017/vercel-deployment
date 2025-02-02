@@ -408,9 +408,6 @@ const FlightSearch = () => {
       // Fetch one-way trip offers
       const oneWayResponse = await fetch("https://vercel-deployment-server-wine.vercel.app/api/get-flight-offers", {
         method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
         body: JSON.stringify(oneWayPayload),
  // Changed from 'no-cors' to 'cors'
       });
