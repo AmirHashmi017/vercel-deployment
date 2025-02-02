@@ -194,6 +194,23 @@ app.get('/bookings/:username', (req, res) => {
     }
   });
 });
+app.post('/bookings', (req, res) => {
+  const { username, orderid } = req.body;
+
+  if (!username || !orderid) {
+    return res.status(400).json({ error: "Username and Order ID are required" });
+  }
+
+  const insertQuery = 'INSERT INTO Bookings (username, orderid) VALUES (?, ?)';
+  pool.query(insertQuery, [username, orderid], (err, result) => {
+    if (err) {
+      res.status(500).json({ error: 'Error inserting booking data' });
+      return;
+    }
+    res.status(200).json({ message: 'Booking saved successfully!' });
+  });
+});
+
 
 // Export Express app as a Vercel serverless function
 module.exports = app;
