@@ -74,7 +74,7 @@ const apiKey = process.env.REACT_APP_DUFFLE_TEST_API_KEY;
             console.log("API hit");
             console.log(booking)
             const proxyUrl = "https://my-proxy-ruby.vercel.app/proxy";
-            const apiUrl = "/air/offer_requests";
+            const apiUrl = "/air/orders";
             const response = await fetch(proxyUrl + apiUrl,  {
                 method: "POST",
                 headers: {
