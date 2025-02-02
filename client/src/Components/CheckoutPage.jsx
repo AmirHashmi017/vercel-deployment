@@ -73,7 +73,9 @@ const apiKey = process.env.REACT_APP_DUFFLE_TEST_API_KEY;
         try {
             console.log("API hit");
             console.log(booking)
-            const response = await fetch("https://vercel-deployment-server-wine.vercel.app/api/air/orders", {
+            const proxyUrl = "https://my-proxy-ruby.vercel.app/proxy";
+            const apiUrl = "/air/offer_requests";
+            const response = await fetch(proxyUrl + apiUrl,  {
                 method: "POST",
                 headers: {
                     "Accept-Encoding": "gzip",
