@@ -114,7 +114,8 @@ app.post("/api/get-flight-offers", async (req, res) => {
               "Content-Type": "application/json",
               "Duffel-Version": "v2",
               "Authorization": `Bearer ${process.env.DUFFEL_TEST_API_KEY}`, // API Key included
-          }
+          },
+          timeout: 10000
       });
 
       res.status(200).json(response.data);
