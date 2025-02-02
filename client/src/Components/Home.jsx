@@ -546,7 +546,7 @@ const fetchFlightOffers = async () => {
     // Fetch one-way trip offers
     // const proxyUrl = "https://cors-anywhere.herokuapp.com/";
     const proxyUrl = "https://my-proxy-ruby.vercel.app/";
-const apiUrl = "https://api.duffel.com/air/offer_requests";
+    const apiUrl = "/air/offer_requests";
 
 const oneWayResponse = await fetch(proxyUrl + apiUrl,  {
       method: "POST",
@@ -572,7 +572,7 @@ const oneWayResponse = await fetch(proxyUrl + apiUrl,  {
     if (returnPayload) {
       // const proxyUrl = "https://cors-anywhere.herokuapp.com/";
       const proxyUrl = "https://my-proxy-ruby.vercel.app/";
-const apiUrl = "https://api.duffel.com/air/offer_requests";
+      const apiUrl = "/air/offer_requests";
 
 const returnResponse = await fetch(proxyUrl + apiUrl, {
         method: "POST",
