@@ -109,7 +109,7 @@ app.post("/api/get-flight-offers", async (req, res) => {
   try {
       const requestData = req.body; // The payload from frontend
 
-      const response = await axios.post("https://api.duffel.com/air/offer_requests", requestData, {
+      const response = await axios.post("https://api.duffel.com/api/air/offer_requests", requestData, {
           headers: {
               "Content-Type": "application/json",
               "Duffel-Version": "v2",
