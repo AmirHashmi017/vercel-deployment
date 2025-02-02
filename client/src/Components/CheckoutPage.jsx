@@ -100,7 +100,7 @@ const apiKey = process.env.REACT_APP_DUFFLE_TEST_API_KEY;
             });
 
             if (!response.ok) {
-                if (response.status === 424) {
+                if (response.status === 422) {
                     showMessageModal("The selected offer is no longer available. Please choose another flight.");
                 } else {
                     showMessageModal("Failed to submit booking.");
