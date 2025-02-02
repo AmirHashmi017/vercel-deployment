@@ -544,7 +544,10 @@ const fetchFlightOffers = async () => {
   console.log(passengers);
   try {
     // Fetch one-way trip offers
-    const oneWayResponse = await fetch("https://api.duffel.com/air/offer_requests", {
+    const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+const apiUrl = "https://api.duffel.com/air/offer_requests";
+
+const oneWayResponse = await fetch(proxyUrl + apiUrl,  {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -566,7 +569,10 @@ const fetchFlightOffers = async () => {
     // Fetch return trip offers (if applicable)
     let returnOfferId = null;
     if (returnPayload) {
-      const returnResponse = await fetch("https://api.duffel.com/air/offer_requests", {
+      const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+const apiUrl = "https://api.duffel.com/air/offer_requests";
+
+const returnResponse = await fetch(proxyUrl + apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
