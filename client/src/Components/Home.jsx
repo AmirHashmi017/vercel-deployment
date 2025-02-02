@@ -404,16 +404,15 @@ const FlightSearch = () => {
     }
     console.log(passengers);
     try {
+      
       // Fetch one-way trip offers
-      const oneWayResponse = await fetch("https://vercel-deployment-server-wine.vercel.app/api/air/offer_requests", {
+      const oneWayResponse = await fetch("https://vercel-deployment-server-wine.vercel.app/api/get-flight-offers", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Duffel-Version": "v2",
-          "Authorization": `Bearer ${apiKey}`,
-        },
+            headers: {
+                "Content-Type": "application/json",
+            },
         body: JSON.stringify(oneWayPayload),
-        credentials: 'include', // Changed from 'no-cors' to 'cors'
+ // Changed from 'no-cors' to 'cors'
       });
   
       if (!oneWayResponse.ok) {
