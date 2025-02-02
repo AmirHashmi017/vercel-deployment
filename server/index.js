@@ -109,7 +109,7 @@ app.post("/api/get-flight-offers", async (req, res) => {
   try {
       const requestData = req.body; // The payload from frontend
 
-      const response = await axios.post("https://api.duffel.com/api/air/offer_requests", requestData, {
+      const response = await axios.post("https://api.duffel.com/air/offer_requests", requestData, {
           headers: {
               "Content-Type": "application/json",
               "Duffel-Version": "v2",
@@ -120,7 +120,20 @@ app.post("/api/get-flight-offers", async (req, res) => {
       res.status(200).json(response.data);
   } catch (error) {
       console.error("Error fetching flight offers:", error);
-      res.status(500).json({ error: "An error occurred while fetching flight offers." });
+      res.status(500).json({
+        error: "An error occurred while fetching flight offers.",
+        requestSent: {
+            url: "https://api.duffel.com/air/offer_requests",
+            headers: {
+                "Content-Type": "application/json",
+                "Duffel-Version": "v2",
+                "Authorization": `Bearer ${process.env.DUFFEL_TEST_API_KEY}` // API Key included
+            },
+            body: requestData
+        },
+        responseError: error.response ? error.response.data : error.message
+    });
+
   }
 });
 
