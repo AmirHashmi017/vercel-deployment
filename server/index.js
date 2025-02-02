@@ -8,16 +8,16 @@ require('dotenv').config();
 const app = express();
 
 // CORS Configuration - Must be before other middleware
-// const corsOptions = {
-//   origin: 'https://vercel-deployment-client-topaz.vercel.app',
-//   methods: ['GET', 'POST', 'OPTIONS'],
-//   allowedHeaders: ['Content-Type', 'Authorization', 'Duffel-Version'],
-//   exposedHeaders: ['Content-Type', 'Authorization', 'Duffel-Version'],
-//   credentials: true,
-//   preflightContinue: false,
-//   optionsSuccessStatus: 204,
-//   maxAge: 86400 // Enable CORS preflight cache for 24 hours
-// };
+const corsOptions = {
+  origin: 'https://vercel-deployment-client-topaz.vercel.app',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Duffel-Version'],
+  exposedHeaders: ['Content-Type', 'Authorization', 'Duffel-Version'],
+  credentials: true,
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+  maxAge: 86400 // Enable CORS preflight cache for 24 hours
+};
 
 // Apply CORS middleware before routes
 app.use(cors(corsOptions));
@@ -36,66 +36,57 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
-app.use('/api', createProxyMiddleware({
-  target: 'https://api.duffel.com',
-  changeOrigin: true,
-  pathRewrite: { '^/api': '' },
-  onProxyRes: (proxyRes, req, res) => {
-    proxyRes.headers['Access-Control-Allow-Origin'] = '*'; // Allow all origins for testing
-  },
-}));
-
 // Proxy middleware for Duffel API
-// app.use(
-//   '/api',
-//   createProxyMiddleware({
-//     target: 'https://api.duffel.com',
-//     changeOrigin: true,
-//     pathRewrite: { '^/api': '' },
-//     timeout: 60000, // Increase timeout to 60 seconds
-//     proxyTimeout: 60000,
-//     onError: (err, req, res) => {
-//       console.error('Proxy Error:', err);
-//       res.status(500).json({ error: 'Proxy request failed', details: err.message });
-//     },
-//     onProxyReq: (proxyReq, req, res) => {
-//       console.log('Proxying request to:', proxyReq.path);
-//       console.log('Request headers:', req.headers);
+app.use(
+  '/api',
+  createProxyMiddleware({
+    target: 'https://api.duffel.com',
+    changeOrigin: true,
+    pathRewrite: { '^/api': '' },
+    timeout: 60000, // Increase timeout to 60 seconds
+    proxyTimeout: 60000,
+    onError: (err, req, res) => {
+      console.error('Proxy Error:', err);
+      res.status(500).json({ error: 'Proxy request failed', details: err.message });
+    },
+    onProxyReq: (proxyReq, req, res) => {
+      console.log('Proxying request to:', proxyReq.path);
+      console.log('Request headers:', req.headers);
       
-//       if (req.headers['authorization']) {
-//         proxyReq.setHeader('Authorization', req.headers['authorization']);
-//       } else {
-//         proxyReq.setHeader('Authorization', `Bearer ${process.env.DUFFEL_TEST_API_KEY}`);
-//       }
-//       proxyReq.setHeader('Duffel-Version', 'v2');
+      if (req.headers['authorization']) {
+        proxyReq.setHeader('Authorization', req.headers['authorization']);
+      } else {
+        proxyReq.setHeader('Authorization', `Bearer ${process.env.DUFFEL_TEST_API_KEY}`);
+      }
+      proxyReq.setHeader('Duffel-Version', 'v2');
       
-//       if (req.method === 'POST' && req.body) {
-//         const bodyData = JSON.stringify(req.body);
-//         console.log('Request body:', bodyData);
-//         proxyReq.setHeader('Content-Type', 'application/json');
-//         proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
-//         proxyReq.write(bodyData);
-//       }
-//     },
-//     onProxyRes: (proxyRes, req, res) => {
-//       console.log('Proxy response status:', proxyRes.statusCode);
-//       console.log('Proxy response headers:', proxyRes.headers);
+      if (req.method === 'POST' && req.body) {
+        const bodyData = JSON.stringify(req.body);
+        console.log('Request body:', bodyData);
+        proxyReq.setHeader('Content-Type', 'application/json');
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+        proxyReq.write(bodyData);
+      }
+    },
+    onProxyRes: (proxyRes, req, res) => {
+      console.log('Proxy response status:', proxyRes.statusCode);
+      console.log('Proxy response headers:', proxyRes.headers);
       
-//       proxyRes.headers['Access-Control-Allow-Origin'] = 'https://vercel-deployment-client-topaz.vercel.app';
-//       proxyRes.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS';
-//       proxyRes.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, Duffel-Version';
-//       proxyRes.headers['Access-Control-Allow-Credentials'] = 'true';
-//     },
-//     onError: (err, req, res) => {
-//       console.error('Proxy error:', err);
-//       res.status(500).json({
-//         error: 'Proxy request failed',
-//         message: err.message,
-//         code: err.code
-//       });
-//     }
-//   })
-// );
+      proxyRes.headers['Access-Control-Allow-Origin'] = 'https://vercel-deployment-client-topaz.vercel.app';
+      proxyRes.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS';
+      proxyRes.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, Duffel-Version';
+      proxyRes.headers['Access-Control-Allow-Credentials'] = 'true';
+    },
+    onError: (err, req, res) => {
+      console.error('Proxy error:', err);
+      res.status(500).json({
+        error: 'Proxy request failed',
+        message: err.message,
+        code: err.code
+      });
+    }
+  })
+);
 
 
 
