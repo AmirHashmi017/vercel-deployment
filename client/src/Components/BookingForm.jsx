@@ -26,7 +26,7 @@ function calculateAge(birthDate) {
 }
 
 const validatePhoneNumber = (phone) => {
-  const phoneRegex = /^\+?[1-9]\d{1,14}$/; // Supports E.164 international format
+  const phoneRegex = /^\+[1-9]\d{1,14}$/; // Ensures the number starts with a '+' and follows E.164 format
   return phoneRegex.test(phone);
 };
 
@@ -57,10 +57,9 @@ function PassengerForm({ type, index, passenger, onUpdate }) {
       setFormErrors((prevErrors) => ({ ...prevErrors, email: '' }));
     }
     if (field === 'phone_number' && !validatePhoneNumber(value)) {
-      setFormErrors((prevErrors) => ({ ...prevErrors, phone_number : 'Invalid Phone Number' }));
-    } 
-    else{
-      setFormErrors((prevErrors) => ({ ...prevErrors, phone_number : '' }));
+      setFormErrors((prevErrors) => ({ ...prevErrors, phone_number: 'Phone number must start with a + and follow international format (e.g., +1234567890)' }));
+    } else {
+      setFormErrors((prevErrors) => ({ ...prevErrors, phone_number: '' }));
     }
     const formattedValue = field === 'title' ? value.toLowerCase().replace('.', '') :
       field === 'gender' ? value.toLowerCase().charAt(0) :
@@ -196,15 +195,15 @@ function PassengerForm({ type, index, passenger, onUpdate }) {
           <div className="form-group">
             <label>Phone number *</label>
             <input
-              id="telephone"
-              type="tel"
-              value={passenger.phone_number || ''}
-              onChange={(e) => handleChange('phone_number', e.target.value)}
-              onBlur={(e) => handleBlur('phone_number', e.target.value)}
-              className="form-input"
-              placeholder="+1234567890"
-              required
-            />
+  id="telephone"
+  type="tel"
+  value={passenger.phone_number || ''}
+  onChange={(e) => handleChange('phone_number', e.target.value)}
+  onBlur={(e) => handleBlur('phone_number', e.target.value)}
+  className="form-input"
+  placeholder="+1234567890 (include +)"
+  required
+/>
             {formErrors.phone_number && <span className="error-message">{formErrors.phone_number}</span>}
           </div>
         </div>
