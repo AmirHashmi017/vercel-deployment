@@ -339,11 +339,11 @@ function PassengerForms() {
           />
         ))}
       </div>
-      {/* <Elements stripe={stripePromise}> */}
+      <Elements>
       <div>
         <PaymentForm />
       </div>
-    {/* </Elements> */}
+    </Elements>
       <button type="submit" className="submit-button">
         Checkout
       </button>
