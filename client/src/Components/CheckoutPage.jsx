@@ -118,7 +118,8 @@ const apiKey = process.env.REACT_APP_DUFFLE_TEST_API_KEY;
             await saveBookingToDatabase(orderId)
             navigate('/yourbookings');
         } catch (error) {
-            console.error("Booking failed:", error);
+            // console.error("Booking failed:", error);
+            showMessageModal("Unstable Internet Connection.");
             setError(error.message || "An error occurred while booking.");
             
         } finally {

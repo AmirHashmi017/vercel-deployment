@@ -25,6 +25,11 @@ function calculateAge(birthDate) {
   return age;
 }
 
+const validatePhoneNumber = (phone) => {
+  const phoneRegex = /^\+?[1-9]\d{1,14}$/; // Supports E.164 international format
+  return phoneRegex.test(phone);
+};
+
 function validateEmail(email) {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return regex.test(email);
@@ -51,7 +56,12 @@ function PassengerForm({ type, index, passenger, onUpdate }) {
     } else {
       setFormErrors((prevErrors) => ({ ...prevErrors, email: '' }));
     }
-
+    if (field === 'phone' && !validatePhoneNumber(value)) {
+      setFormErrors((prevErrors) => ({ ...prevErrors, phone_number : 'Invalid Phone Number' }));
+    } 
+    else{
+      setFormErrors((prevErrors) => ({ ...prevErrors, phone_number : '' }));
+    }
     const formattedValue = field === 'title' ? value.toLowerCase().replace('.', '') :
       field === 'gender' ? value.toLowerCase().charAt(0) :
         value;

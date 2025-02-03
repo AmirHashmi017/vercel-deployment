@@ -187,6 +187,7 @@ const LoginRegisterForm = () => {
                 value={formData.password}
                 onChange={handleInputChange}
                 required
+                minLength={8}
               />
               <label>Password</label>
               <i className="bx bxs-lock-alt"></i>
