@@ -57,9 +57,9 @@ function PassengerForm({ type, index, passenger, onUpdate }) {
       setFormErrors((prevErrors) => ({ ...prevErrors, email: '' }));
     }
     if (field === 'phone_number' && !validatePhoneNumber(value)) {
-      setFormErrors((prevErrors) => ({ ...prevErrors, phone_number: 'Phone number must start with a + and follow international format (e.g., +1234567890)' }));
+      setDateError((prevErrors) => ({ ...prevErrors, phone_number: 'Phone number must start with a + and follow international format (e.g., +1234567890)' }));
     } else {
-      setFormErrors((prevErrors) => ({ ...prevErrors, phone_number: '' }));
+      setDateError((prevErrors) => ({ ...prevErrors, phone_number: '' }));
     }
     const formattedValue = field === 'title' ? value.toLowerCase().replace('.', '') :
       field === 'gender' ? value.toLowerCase().charAt(0) :
@@ -201,7 +201,7 @@ function PassengerForm({ type, index, passenger, onUpdate }) {
   onChange={(e) => handleChange('phone_number', e.target.value)}
   onBlur={(e) => handleBlur('phone_number', e.target.value)}
   className="form-input"
-  placeholder="+1234567890 (include +)"
+  placeholder="+1234567890"
   required
 />
             {formErrors.phone_number && <span className="error-message">{formErrors.phone_number}</span>}
