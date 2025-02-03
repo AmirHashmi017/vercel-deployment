@@ -282,6 +282,10 @@ body {
       background-color: #fff;
       cursor: pointer;
     }
+    #travel-class
+    {
+      width:90vw;
+    }
     .navbar {
       padding: 10px 20px;
       flex-direction: column;
