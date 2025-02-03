@@ -56,7 +56,7 @@ function PassengerForm({ type, index, passenger, onUpdate }) {
     } else {
       setFormErrors((prevErrors) => ({ ...prevErrors, email: '' }));
     }
-    if (field === 'phone' && !validatePhoneNumber(value)) {
+    if (field === 'telephone' && !validatePhoneNumber(value)) {
       setFormErrors((prevErrors) => ({ ...prevErrors, phone_number : 'Invalid Phone Number' }));
     } 
     else{
