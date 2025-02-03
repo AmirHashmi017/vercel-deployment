@@ -803,7 +803,7 @@ required>
       
       minHeight: '40px',
       '@media (max-width: 768px)': {
-        width:'100%', // Apply 25vw only on desktop
+        width:'100%',
         }
     }),
   }}
