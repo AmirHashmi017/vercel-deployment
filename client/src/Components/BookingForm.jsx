@@ -6,6 +6,9 @@ import axios from 'axios'; // Import axios for API calls
 import { useBooking } from '../context/BookingContext';
 import MessageModal from "./MessageModal"; // Import the modal component
 import './MessageModal.css';
+import PaymentForm from './StripeForm';
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 const TITLES = ['Mr.', 'Ms.', 'Mrs.', 'Miss', 'Dr.'];
 const GENDERS = ['Male', 'Female'];
@@ -34,183 +37,6 @@ function validateEmail(email) {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return regex.test(email);
 }
-
-// function PassengerForm({ type, index, passenger, onUpdate }) {
-//   const [dateError, setDateError] = useState('');
-//   const [formErrors, setFormErrors] = useState({});
-
-//   const handleChange = (field, value) => {
-//     if (field === 'born_on') {
-//       const age = calculateAge(value);
-//       if (type === 'adult' && age < 18) {
-//         setDateError('Adult passengers must be at least 18 years old.');
-//       } else if (passenger.age && age !== parseInt(passenger.age)) {
-//         setDateError(`Date of birth does not match the selected age of ${passenger.age} years. Based on birth date, age should be ${age} years.`);
-//       } else {
-//         setDateError('');
-//       }
-//     }
-
-//     if (field === 'email' && !validateEmail(value)) {
-//       setFormErrors((prevErrors) => ({ ...prevErrors, email: 'Invalid email address' }));
-//     } else {
-//       setFormErrors((prevErrors) => ({ ...prevErrors, email: '' }));
-//     }
-//     if (field === 'phone_number' && !validatePhoneNumber(value)) {
-//       setErrors((prevErrors) => ({ ...prevErrors, phone_number: 'Phone number must start with a + and follow international format (e.g., +1234567890)' }));
-//     } else {
-//       setFormErrors((prevErrors) => ({ ...prevErrors, phone_number: '' }));
-//     }
-//     const formattedValue = field === 'title' ? value.toLowerCase().replace('.', '') :
-//       field === 'gender' ? value.toLowerCase().charAt(0) :
-//         value;
-
-//     onUpdate({
-//       ...passenger,
-//       [field]: formattedValue,
-//     });
-
-//     setFormErrors((prevErrors) => ({ ...prevErrors, [field]: '' }));
-//   };
-
-//   const validateField = (field, value) => {
-//     if (!value) {
-//       setFormErrors((prevErrors) => ({ ...prevErrors, [field]: 'This field is required' }));
-//       return false;
-//     }
-//     return true;
-//   };
-
-//   const handleBlur = (field, value) => {
-//     validateField(field, value);
-//   };
-
-//   return (
-//     <div className="passenger-form">
-//       <div className="passenger-type-label">
-//         {type === 'adult' ? 'Adult' : 'Child'} {index + 1}
-//       </div>
-//       <div className="form-section">
-//         <h2>Personal details</h2>
-
-//         <div className="form-row">
-//           <div className="form-group">
-//             <label>Title *</label>
-//             <select
-//               value={passenger.title || 'mr'}
-//               onChange={(e) => handleChange('title', e.target.value)}
-//               onBlur={(e) => handleBlur('title', e.target.value)}
-//               className="form-select"
-//               required
-//             >
-//               {TITLES.map((title) => (
-//                 <option key={title} value={title.toLowerCase().replace('.', '')}>
-//                   {title}
-//                 </option>
-//               ))}
-//             </select>
-//             {formErrors.title && <span className="error-message">{formErrors.title}</span>}
-//           </div>
-
-//           <div className="form-group">
-//             <label>Given name *</label>
-//             <input
-//               type="text"
-//               value={passenger.given_name || ''}
-//               onChange={(e) => handleChange('given_name', e.target.value)}
-//               onBlur={(e) => handleBlur('given_name', e.target.value)}
-//               className="form-input"
-//               placeholder="Enter given name"
-//               required
-//             />
-//             {formErrors.given_name && <span className="error-message">{formErrors.given_name}</span>}
-//           </div>
-
-//           <div className="form-group">
-//             <label>Family name *</label>
-//             <input
-//               type="text"
-//               value={passenger.family_name || ''}
-//               onChange={(e) => handleChange('family_name', e.target.value)}
-//               onBlur={(e) => handleBlur('family_name', e.target.value)}
-//               className="form-input"
-//               placeholder="Enter family name"
-//               required
-//             />
-//             {formErrors.family_name && <span className="error-message">{formErrors.family_name}</span>}
-//           </div>
-//         </div>
-
-//         <div className="form-row">
-//           <div className="form-group">
-//             <label>Date of birth *</label>
-//             <input
-//               id="datepicker"
-//               type="date"
-//               value={passenger.born_on || ''}
-//               onChange={(e) => handleChange('born_on', e.target.value)}
-//               onBlur={(e) => handleBlur('born_on', e.target.value)}
-//               className={`form-input ${dateError ? 'error' : ''}`}
-//               max={new Date().toISOString().split('T')[0]}
-//               required
-//             />
-//             {dateError && <span className="error-message">{dateError}</span>}
-//             {formErrors.born_on && <span className="error-message">{formErrors.born_on}</span>}
-//           </div>
-
-//           <div className="form-group">
-//             <label>Gender *</label>
-//             <select
-//               value={passenger.gender === 'm' ? 'Male' : 'Female'}
-//               onChange={(e) => handleChange('gender', e.target.value.toLowerCase().charAt(0))}
-//               onBlur={(e) => handleBlur('gender', e.target.value)}
-//               className="form-select"
-//               required
-//             >
-//               {GENDERS.map((gender) => (
-//                 <option key={gender} value={gender}>
-//                   {gender}
-//                 </option>
-//               ))}
-//             </select>
-//             {formErrors.gender && <span className="error-message">{formErrors.gender}</span>}
-//           </div>
-
-//           <div className="form-group">
-//             <label>Email *</label>
-//             <input
-//               type="email"
-//               value={passenger.email || ''}
-//               onChange={(e) => handleChange('email', e.target.value)}
-//               onBlur={(e) => handleBlur('email', e.target.value)}
-//               className="form-input"
-//               placeholder="Enter email"
-//               required
-//             />
-//             {formErrors.email && <span className="error-message">{formErrors.email}</span>}
-//           </div>
-//         </div>
-
-//         <div className="form-row">
-//           <div className="form-group">
-//             <label>Phone number *</label>
-//             <input
-//   id="telephone"
-//   type="tel"
-//   value={passenger.phone_number || ''}
-//   onChange={(e) => handleChange('phone_number', e.target.value)}
-//   onBlur={(e) => handleBlur('phone_number', e.target.value)}
-//   className="form-input"
-//   placeholder="+1234567890"
-//   required
-// />
-//             {formErrors.phone_number && <span className="error-message">{formErrors.phone_number}</span>}
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
 function PassengerForm({ type, index, passenger, onUpdate }) {
   const [dateError, setDateError] = useState('');
   const [formErrors, setFormErrors] = useState({});
@@ -512,7 +338,11 @@ function PassengerForms() {
           />
         ))}
       </div>
-
+      <Elements stripe={stripePromise}>
+      <div>
+        <PaymentForm />
+      </div>
+    </Elements>
       <button type="submit" className="submit-button">
         Checkout
       </button>
