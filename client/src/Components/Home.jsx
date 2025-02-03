@@ -781,7 +781,7 @@ required>
 />
 
 
-          <button type="button" className="swap">⇆</button>
+          
 
           {/* Destination Select */}
           <Select
