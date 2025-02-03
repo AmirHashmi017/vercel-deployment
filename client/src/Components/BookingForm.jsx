@@ -434,7 +434,7 @@ function PassengerForms() {
       if (!validateEmail(passenger.email)) errors.push(`Passenger ${index + 1}: Invalid email address`);
       if (!passenger.phone_number) errors.push(`Passenger ${index + 1}: Phone number is required`);
 
-      if(!validatePhoneNumber(phone_number))
+      if(!validatePhoneNumber(passenger.phone_number))
       {
         errors.push(`Invalid Phone number`);
       }
