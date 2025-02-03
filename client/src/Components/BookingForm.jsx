@@ -10,7 +10,7 @@ import PaymentForm from './StripeForm';
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
-const stripePromise = loadStripe("your_publishable_key");
+// const stripePromise = loadStripe("your_publishable_key");
 const TITLES = ['Mr.', 'Ms.', 'Mrs.', 'Miss', 'Dr.'];
 const GENDERS = ['Male', 'Female'];
 function calculateAge(birthDate) {
@@ -339,11 +339,11 @@ function PassengerForms() {
           />
         ))}
       </div>
-      <Elements>
+      {/* <Elements stripe={stripePromise}>
       <div>
         <PaymentForm />
       </div>
-    </Elements>
+    </Elements> */}
       <button type="submit" className="submit-button">
         Checkout
       </button>
