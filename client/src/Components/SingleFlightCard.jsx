@@ -93,9 +93,7 @@ function SFlightCard({
     doc.setFontSize(14);
     const flightDetails = [
       ['Class', firstSegment.cabinClass],
-      ['Airline', airlineName],
-      ['Aircraft', 'Boeing 777-300ER'],
-      ['Flight', 'EK625']
+      ['Airline', airlineName]
     ];
   
     flightDetails.forEach(([label, value], index) => {
