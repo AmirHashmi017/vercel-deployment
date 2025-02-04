@@ -32,48 +32,102 @@ function SFlightCard({
   // Function to generate and download PDF
   const handleDownloadTicket = () => {
     const doc = new jsPDF({
-      orientation: 'landscape', // Set to landscape for a ticket-like layout
+      orientation: 'portrait',
       unit: 'mm',
-      format: [100, 150] // Custom size for a ticket
+      format: 'a4'
     });
-
-
-    // Add a border around the ticket
-    doc.setDrawColor(0);
-    doc.setLineWidth(0.5);
-    doc.rect(5, 5, 90, 140); // Draw a rectangle around the ticket
-
-    // Add flight details
-    doc.setFontSize(12);
+  
+    // Set initial position
+    const margin = 20;
+    let y = margin;
+  
+  
+    // Header section with flight times and route
+    y = margin;
+    doc.setFontSize(24);
     doc.setFont('helvetica', 'bold');
-    doc.text(`Flight Ticket`, 50, 20, { align: 'center' });
-
-    doc.setFontSize(10);
+    doc.text(`${firstSegment.departureTime} - ${lastSegment.arrivalTime}`, doc.internal.pageSize.width / 2, y + 10, { align: 'center' });
+  
+    doc.setFontSize(18);
     doc.setFont('helvetica', 'normal');
-    doc.text(`Airline: ${airlineName}`, 10, 30);
-    doc.text(`Departure: ${firstSegment.departureTime}`, 10, 40);
-    doc.text(`Arrival: ${lastSegment.arrivalTime}`, 10, 50);
-    doc.text(`Duration: ${calculateTotalDuration(validSegments)}`, 10, 60);
-    doc.text(`Route: ${firstSegment.origin} - ${lastSegment.destination}`, 10, 70);
-    doc.text(`Cabin Class: ${firstSegment.cabinClass}`, 10, 80);
-
-    // Add passenger details
-    doc.text(`Passengers: ${formattedPassengerTypes}`, 10, 90);
-    doc.text(`Checked Bags: ${passengerBaggage.checkedBags || 0}`, 10, 100);
-    doc.text(`Carry-on Bags: ${passengerBaggage.carryOnBags || 0}`, 10, 110);
-
-    // Add price
-    doc.setFontSize(12);
+    doc.text(airlineName, doc.internal.pageSize.width / 2, y + 20, { align: 'center' });
+  
+    // Duration and route
+    doc.setFontSize(20);
+    doc.text(calculateTotalDuration(validSegments), doc.internal.pageSize.width - margin - 40, y + 10);
+    doc.text(`${firstSegment.origin} - ${lastSegment.destination}`, doc.internal.pageSize.width - margin - 40, y + 20);
+  
+    // Flight type (e.g., "Non-stop" if only one segment)
+    doc.setFontSize(16);
+    doc.text(validSegments.length === 1 ? 'Non-stop' : `${validSegments.length - 1} stops`, doc.internal.pageSize.width - margin, y + 10, { align: 'right' });
+  
+    // Departure details
+    y += 50;
+    doc.setFontSize(16);
     doc.setFont('helvetica', 'bold');
-    doc.text(`Total Price: £${price}`, 10, 120);
-
-    // Add a barcode or QR code placeholder (optional)
-    doc.setFontSize(8);
-    doc.text(`Ticket ID: ${offerId}`, 10, 130);
-    doc.text(`Scan this code at the airport`, 10, 135);
-
+    doc.text(`${firstSegment.departureDate}, ${firstSegment.departureTime}`, margin, y);
+    
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Depart from ${firstSegment.departureAirport}`, doc.internal.pageSize.width - margin, y, { align: 'right' });
+    doc.text(`(${firstSegment.origin}), Terminal ${firstSegment.departureTerminal || 'M'}`, doc.internal.pageSize.width - margin, y + 10, { align: 'right' });
+  
+    // Flight duration
+    y += 25;
+    doc.setFontSize(14);
+    doc.text(`Flight duration: ${calculateTotalDuration(validSegments)}`, margin, y);
+  
+    // Arrival details
+    y += 15;
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`${lastSegment.arrivalDate}, ${lastSegment.arrivalTime}`, margin, y);
+    
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Arrive at ${lastSegment.arrivalAirport}`, doc.internal.pageSize.width - margin, y, { align: 'right' });
+    doc.text(`(${lastSegment.destination}), Terminal ${lastSegment.arrivalTerminal || '3'}`, doc.internal.pageSize.width - margin, y + 10, { align: 'right' });
+  
+    // Flight details
+    y += 30;
+    doc.setFontSize(14);
+    const flightDetails = [
+      ['Class', firstSegment.cabinClass],
+      ['Airline', airlineName],
+      ['Aircraft', 'Boeing 777-300ER'],
+      ['Flight', 'EK625']
+    ];
+  
+    flightDetails.forEach(([label, value], index) => {
+      doc.text(label, margin, y + (index * 10));
+      doc.text(value, margin + 80, y + (index * 10));
+    });
+  
+    // Passenger and baggage info
+    y += 50;
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Passenger Information', margin, y);
+    
+    y += 10;
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Passengers: ${formattedPassengerTypes}`, margin, y);
+    doc.text(`Checked Bags: ${passengerBaggage.checkedBags || 0}`, margin, y + 10);
+    doc.text(`Carry-on Bags: ${passengerBaggage.carryOnBags || 0}`, margin, y + 20);
+  
+    // Price
+    y += 40;
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Total Price: £${price}`, margin, y);
+  
+    // Add a subtle border around the ticket
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.5);
+    doc.rect(10, 10, doc.internal.pageSize.width - 20, doc.internal.pageSize.height - 20);
+  
     // Save the PDF
-    doc.save(`ticket_${offerId}.pdf`);
+    doc.save(`flight-ticket-${offerId}.pdf`);
   };
 
   return (
