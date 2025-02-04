@@ -1,5 +1,6 @@
 import React from 'react';
-import './SingleFlightCard.css'; // Import Flight Context
+import './SingleFlightCard.css';
+import jsPDF from 'jspdf';
 
 function SFlightCard({ 
   airlineLogo,
@@ -20,10 +21,6 @@ function SFlightCard({
   const passengerBaggage = baggage.find(bag => bag.passengerId === passengers[0]?.passengerId) || {};
 
   // Count passenger types
-//   const passengerCounts = passengers.reduce((acc, passenger) => {
-//     acc[passenger.type] = (acc[passenger.type] || 0) + 1;
-//     return acc;
-//   }, {});
   const passengerTypes = passengers.reduce((acc, passenger) => {
     acc[passenger.type] = (acc[passenger.type] || 0) + 1;
     return acc;
@@ -31,6 +28,40 @@ function SFlightCard({
   const formattedPassengerTypes = Object.entries(passengerTypes)
     .map(([type, count]) => `${count} ${type}${count > 1 ? 's' : ''}`)
     .join(' , ');
+
+  // Function to generate and download PDF
+  const handleDownloadTicket = () => {
+    const doc = new jsPDF();
+
+    // Add airline logo (if available)
+    if (airlineLogo) {
+      const img = new Image();
+      img.src = airlineLogo;
+      doc.addImage(img, 'PNG', 10, 10, 50, 20);
+    }
+
+    // Add flight details
+    doc.setFontSize(12);
+    doc.text(`Airline: ${airlineName}`, 10, 40);
+    doc.text(`Departure: ${firstSegment.departureTime}`, 10, 50);
+    doc.text(`Arrival: ${lastSegment.arrivalTime}`, 10, 60);
+    doc.text(`Duration: ${calculateTotalDuration(validSegments)}`, 10, 70);
+    doc.text(`Route: ${firstSegment.origin} - ${lastSegment.destination}`, 10, 80);
+    doc.text(`Cabin Class: ${firstSegment.cabinClass}`, 10, 90);
+
+    // Add passenger details
+    doc.text(`Passengers: ${formattedPassengerTypes}`, 10, 100);
+    doc.text(`Checked Bags: ${passengerBaggage.checkedBags || 0}`, 10, 110);
+    doc.text(`Carry-on Bags: ${passengerBaggage.carryOnBags || 0}`, 10, 120);
+
+    // Add price
+    doc.setFontSize(14);
+    doc.text(`Total Price: £${price}`, 10, 130);
+
+    // Save the PDF
+    doc.save(`ticket_${offerId}.pdf`);
+  };
+
   return (
     <div className="card">
       <div className="card-header">
@@ -102,8 +133,10 @@ function SFlightCard({
           <div>Carry-on Bags: {passengerBaggage.carryOnBags || 0}</div>
         </div>
 
-        {/* Display Passenger Types */}
-       
+        {/* Download Ticket Button */}
+        <button className="download-ticket-button" onClick={handleDownloadTicket}>
+          Download Ticket
+        </button>
       </div>
     </div>
   );
