@@ -34,11 +34,6 @@ function SFlightCard({
     const doc = new jsPDF();
 
     // Add airline logo (if available)
-    if (airlineLogo) {
-      const img = new Image();
-      img.src = airlineLogo;
-      doc.addImage(img, 'PNG', 10, 10, 50, 20);
-    }
 
     // Add flight details
     doc.setFontSize(12);
