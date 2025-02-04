@@ -31,27 +31,46 @@ function SFlightCard({
 
   // Function to generate and download PDF
   const handleDownloadTicket = () => {
-    const doc = new jsPDF();
+    const doc = new jsPDF({
+      orientation: 'landscape', // Set to landscape for a ticket-like layout
+      unit: 'mm',
+      format: [100, 150] // Custom size for a ticket
+    });
 
-    // Add airline logo (if available)
+
+    // Add a border around the ticket
+    doc.setDrawColor(0);
+    doc.setLineWidth(0.5);
+    doc.rect(5, 5, 90, 140); // Draw a rectangle around the ticket
 
     // Add flight details
     doc.setFontSize(12);
-    doc.text(`Airline: ${airlineName}`, 10, 40);
-    doc.text(`Departure: ${firstSegment.departureTime}`, 10, 50);
-    doc.text(`Arrival: ${lastSegment.arrivalTime}`, 10, 60);
-    doc.text(`Duration: ${calculateTotalDuration(validSegments)}`, 10, 70);
-    doc.text(`Route: ${firstSegment.origin} - ${lastSegment.destination}`, 10, 80);
-    doc.text(`Cabin Class: ${firstSegment.cabinClass}`, 10, 90);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Flight Ticket`, 50, 20, { align: 'center' });
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Airline: ${airlineName}`, 10, 30);
+    doc.text(`Departure: ${firstSegment.departureTime}`, 10, 40);
+    doc.text(`Arrival: ${lastSegment.arrivalTime}`, 10, 50);
+    doc.text(`Duration: ${calculateTotalDuration(validSegments)}`, 10, 60);
+    doc.text(`Route: ${firstSegment.origin} - ${lastSegment.destination}`, 10, 70);
+    doc.text(`Cabin Class: ${firstSegment.cabinClass}`, 10, 80);
 
     // Add passenger details
-    doc.text(`Passengers: ${formattedPassengerTypes}`, 10, 100);
-    doc.text(`Checked Bags: ${passengerBaggage.checkedBags || 0}`, 10, 110);
-    doc.text(`Carry-on Bags: ${passengerBaggage.carryOnBags || 0}`, 10, 120);
+    doc.text(`Passengers: ${formattedPassengerTypes}`, 10, 90);
+    doc.text(`Checked Bags: ${passengerBaggage.checkedBags || 0}`, 10, 100);
+    doc.text(`Carry-on Bags: ${passengerBaggage.carryOnBags || 0}`, 10, 110);
 
     // Add price
-    doc.setFontSize(14);
-    doc.text(`Total Price: £${price}`, 10, 130);
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Total Price: £${price}`, 10, 120);
+
+    // Add a barcode or QR code placeholder (optional)
+    doc.setFontSize(8);
+    doc.text(`Ticket ID: ${offerId}`, 10, 130);
+    doc.text(`Scan this code at the airport`, 10, 135);
 
     // Save the PDF
     doc.save(`ticket_${offerId}.pdf`);
