@@ -350,7 +350,6 @@ useEffect(() => {
 
     const fetchAllAirports = async (after = null, allAirports = []) => {
       console.log("Fetching airports...");
-      console.log("API Key:", apiKey);
       let url = "https://vercel-deployment-server-wine.vercel.app/api/air/airports?limit=200";
       if (after) {
         url = `${url}&after=${after}`;
