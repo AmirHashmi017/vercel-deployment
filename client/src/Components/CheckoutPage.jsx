@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useFlight } from "../context/FlightContext";
 import axios from "axios";
 import './CheckoutPage.css';
-import SFlightCard from './SingleFlightCard';
+import SBFlightCard from './SingleFlightcardB';
 import PassengerForms from './BookingForm';
 import { useNavigate } from 'react-router-dom';
 import { useBooking } from '../context/BookingContext';
@@ -173,7 +173,7 @@ const apiKey = process.env.REACT_APP_DUFFLE_TEST_API_KEY;
     
           <div className="flight-summary">
             <h1>Selected Offer</h1>
-            <SFlightCard
+            <SBFlightCard
               airlineLogo={airlineLogo}
               airlineName={airlineName}
               segments={segments}
