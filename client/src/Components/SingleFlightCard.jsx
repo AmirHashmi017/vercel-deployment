@@ -22,15 +22,16 @@ function SFlightCard({
 
   // Count passenger types
   const passengerTypes = passengers.reduce((acc, passenger) => {
-    acc[passenger.type] = (acc[passenger.type] || 0) + 1;
+    // If type is null or empty string, use 'child'
+    const type = passenger.type || 'child';
+    acc[type] = (acc[type] || 0) + 1;
     return acc;
   }, {});
+
   const formattedPassengerTypes = Object.entries(passengerTypes)
-  .map(([type, count]) => {
-    const displayType = type ? type : 'child';
-    return `${count} ${displayType}${count > 1 ? 's' : ''}`;
-  })
-  .join(' , ');
+    .map(([type, count]) => `${count} ${type}${count > 1 ? 's' : ''}`)
+    .join(' , ');
+
   const handleDownloadTicket = () => {
     const doc = new jsPDF({
       orientation: 'portrait',
@@ -206,7 +207,6 @@ function SFlightCard({
         </button>
       </div>
     </div>
-
   );
 }
 
