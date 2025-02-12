@@ -220,7 +220,7 @@ function YourBookings() {
             <p>You haven't made any bookings yet. Start your journey by searching for flights!</p>
           </div>
         ) : (
-          orderDetails.map((order, index) => (
+          orderDetails.reverse().map((order, index) => (
             <SFlightCard
               key={index}
               airlineLogo={order.airlineLogo}
