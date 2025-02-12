@@ -26,10 +26,11 @@ function SFlightCard({
     return acc;
   }, {});
   const formattedPassengerTypes = Object.entries(passengerTypes)
-    .map(([type, count]) => `${count} ${type}${count > 1 ? 's' : ''}`)
-    .join(' , ');
-
-  // Function to generate and download PDF
+  .map(([type, count]) => {
+    const displayType = type ? type : 'child';
+    return `${count} ${displayType}${count > 1 ? 's' : ''}`;
+  })
+  .join(' , ');
   const handleDownloadTicket = () => {
     const doc = new jsPDF({
       orientation: 'portrait',
